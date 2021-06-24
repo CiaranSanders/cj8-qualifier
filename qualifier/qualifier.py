@@ -19,7 +19,8 @@ def make_table(rows: List[List[Any]], labels: Optional[List[Any]] = None, center
             for i in range(n_rows):
                 if len(str(rows[i][j])) > col_lens[j]:
                     col_lens[j] = len(str(rows[i][j]))
-        return col_lens
+        # return col_lens
+        return [c_len + 2 for c_len in col_lens]
 
     def build_top_line(col_lens: List[int]) -> str:
         line = '┌'
@@ -48,9 +49,9 @@ def make_table(rows: List[List[Any]], labels: Optional[List[Any]] = None, center
         for i, value in enumerate(values):
             col_len = col_lens[i]
             if centered:
-                line += f'{str(value):^{col_len}}|'
+                line += f' {str(value):^{col_len - 2}} │'
             else:
-                line += f'{str(value):<{col_len}}|'
+                line += f' {str(value):<{col_len - 2}} │'
 
         return line + '\n'
 
@@ -93,14 +94,12 @@ def make_table(rows: List[List[Any]], labels: Optional[List[Any]] = None, center
 
 
 if __name__ == '__main__':
-    print('test 1')
     table = make_table(
         [['hello', 'there',], ['obi', 'wan'], ['ooga', 'boogachooga'],],
         labels=['boss', 'baby']
     )
     print(table)
 
-    print('example 1')
     table = make_table(
         rows=[
             ["Lemon"],
@@ -112,7 +111,6 @@ if __name__ == '__main__':
     )
     print(table)
 
-    print('example 2')
     table = make_table(
         rows=[
             ["Lemon", 18_3285, "Owner"],
@@ -125,7 +123,6 @@ if __name__ == '__main__':
     )
     print(table)
 
-    print('example 3')
     table = make_table(
        rows=[
            ["Ducky Yellow", 3],
@@ -137,4 +134,7 @@ if __name__ == '__main__':
        centered=True
     )
     print(table)
+    table = make_table(rows=[["Apple", 5]])
+    print(table)
 
+# AssertionError: '┌───────┬───┐\n│ Apple | 5 |\n└───────┴───┘' != '┌───────┬───┐\n│ Apple │ 5 │\n└───────┴───┘'
